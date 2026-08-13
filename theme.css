@@ -1,8 +1,13 @@
 /*
  * invidious-theme
  * Material Design 3 look for Invidious, inspired by Materialious (materialio.us)
- * and built on the same design tokens as Beer CSS (beercss.com), the library
- * Materialious itself is based on.
+ * and built directly on Beer CSS (beercss.com) — the actual library
+ * Materialious itself is based on. Color roles (--primary, --on-primary,
+ * --surface, --outline, etc.) are Beer CSS's own color engine
+ * (material-dynamic-colors) run against our brand seed #2596be — see
+ * vendor/beer-bootstrap.js and vendor/*.min.js. Shape/elevation
+ * (--md-radius-*, --md-elevation-*) remain our own, hand-picked values —
+ * Beer CSS's color engine doesn't cover those.
  *
  * Loaded after default.css — relies on source order to override, following
  * the same specificity level default.css already uses. Respects Invidious's
@@ -19,17 +24,26 @@
  * don't load it) and remain stock.
  */
 
+/*
+ * Color roles below are a static fallback only — real values are the exact
+ * output of Beer CSS's own color engine (material-dynamic-colors) run
+ * against our brand seed #2596be, computed once and hardcoded here so
+ * --primary etc. resolve correctly during the brief window before
+ * vendor/beer-bootstrap.js's ui("theme", "#2596be") call resolves and
+ * injects a body.light{...}/body.dark{...} stylesheet overriding these.
+ * See vendor/beer-bootstrap.js.
+ */
 :root {
-  --md-primary: #2596be;
-  --md-on-primary: #ffffff;
-  --md-primary-container: #d2ecf5;
-  --md-on-primary-container: #0a3c4c;
+  --primary: #006685;
+  --on-primary: #ffffff;
+  --primary-container: #bee9ff;
+  --on-primary-container: #001f2a;
 
-  --md-surface: #fbfcfe;
-  --md-on-surface: #1a1c1e;
-  --md-surface-variant: #eef1f4;
-  --md-on-surface-variant: #42474e;
-  --md-outline: #b8bec5;
+  --surface: #f8f9fb;
+  --on-surface: #191c1e;
+  --surface-variant: #dce4e9;
+  --on-surface-variant: #40484c;
+  --outline: #70787d;
 
   --md-radius-sm: 8px;
   --md-radius-md: 12px;
@@ -39,16 +53,16 @@
 }
 
 body.dark-theme {
-  --md-primary: #7fd0ee;
-  --md-on-primary: #00344c;
-  --md-primary-container: #0a3c4c;
-  --md-on-primary-container: #d2ecf5;
+  --primary: #6ad3ff;
+  --on-primary: #003546;
+  --primary-container: #004d65;
+  --on-primary-container: #bee9ff;
 
-  --md-surface: #121417;
-  --md-on-surface: #e2e2e6;
-  --md-surface-variant: #1c1f23;
-  --md-on-surface-variant: #c2c7cf;
-  --md-outline: #42474e;
+  --surface: #111415;
+  --on-surface: #e1e2e5;
+  --surface-variant: #40484c;
+  --on-surface-variant: #c0c8cd;
+  --outline: #8a9297;
 
   --md-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 3px 1px rgba(0, 0, 0, 0.3);
   --md-elevation-2: 0 2px 6px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
@@ -58,16 +72,16 @@ body.dark-theme {
    pattern: when the user hasn't explicitly picked a theme, follow the OS. */
 @media (prefers-color-scheme: dark) {
   .no-theme {
-    --md-primary: #7fd0ee;
-    --md-on-primary: #00344c;
-    --md-primary-container: #0a3c4c;
-    --md-on-primary-container: #d2ecf5;
+    --primary: #6ad3ff;
+    --on-primary: #003546;
+    --primary-container: #004d65;
+    --on-primary-container: #bee9ff;
 
-    --md-surface: #121417;
-    --md-on-surface: #e2e2e6;
-    --md-surface-variant: #1c1f23;
-    --md-on-surface-variant: #c2c7cf;
-    --md-outline: #42474e;
+    --surface: #111415;
+    --on-surface: #e1e2e5;
+    --surface-variant: #40484c;
+    --on-surface-variant: #c0c8cd;
+    --outline: #8a9297;
 
     --md-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 3px 1px rgba(0, 0, 0, 0.3);
     --md-elevation-2: 0 2px 6px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
@@ -92,15 +106,15 @@ body {
 /* Light-theme links are already a muted blue (#335d7a) — close enough in
    hue to retint directly. Dark-theme links are a neutral gray at rest that
    only turns cyan on hover/focus (rgb(0,182,240)) — already close to our
-   own dark-mode primary (#7fd0ee) and a deliberate "quiet until interacted
+   own dark-mode primary (#6ad3ff) and a deliberate "quiet until interacted
    with" convention, so left as-is rather than fighting it. */
 .light-theme a,
 .light-theme .simulated_a {
-  color: var(--md-primary);
+  color: var(--primary);
 }
 
 code {
-  background-color: var(--md-surface-variant);
+  background-color: var(--surface-variant);
   border-radius: var(--md-radius-sm);
   padding: 0.15em 0.4em;
 }
@@ -118,18 +132,18 @@ pre code {
   margin: 0.5em 0 1.5em 0;
   padding: 0.6em 1em;
   border-radius: var(--md-radius-md);
-  background-color: var(--md-surface-variant);
+  background-color: var(--surface-variant);
   box-shadow: var(--md-elevation-1);
 }
 
 .navbar .index-link {
   font-weight: 700;
   font-size: 1.15em;
-  color: var(--md-primary);
+  color: var(--primary);
 }
 
 .navbar .pure-menu-heading {
-  color: var(--md-on-surface-variant);
+  color: var(--on-surface-variant);
   border-radius: var(--md-radius-pill);
   padding: 0.4em;
   transition: background-color 0.15s ease;
@@ -150,7 +164,7 @@ pre code {
  */
 
 .searchbar .pure-form {
-  background-color: var(--md-surface-variant);
+  background-color: var(--surface-variant);
   border-radius: var(--md-radius-pill);
   padding: 0 0.4em 0 1em;
 }
@@ -159,7 +173,7 @@ pre code {
   border: none !important;
   border-bottom: none !important;
   background-color: transparent;
-  color: var(--md-on-surface);
+  color: var(--on-surface);
   padding: 0.6em 0;
 }
 
@@ -171,13 +185,13 @@ pre code {
 
 .searchbar #searchbutton {
   border-radius: var(--md-radius-pill);
-  color: var(--md-primary);
+  color: var(--primary);
   padding: 0.5em;
 }
 
 .searchbar #searchbutton:hover {
   background-color: rgba(0, 0, 0, 0.06);
-  color: var(--md-primary);
+  color: var(--primary);
 }
 
 .dark-theme .searchbar #searchbutton:hover {
@@ -193,12 +207,12 @@ pre code {
 .light-theme #filters-box,
 .dark-theme #filters-box,
 .no-theme #filters-box {
-  background-color: var(--md-surface-variant);
+  background-color: var(--surface-variant);
   border-radius: var(--md-radius-md);
 }
 
 #filters-collapse summary:before {
-  color: var(--md-primary);
+  color: var(--primary);
 }
 
 /*
@@ -209,22 +223,22 @@ pre code {
 .pure-button-secondary,
 .pure-button:not([class*="pure-button-"]) {
   border-radius: var(--md-radius-pill);
-  border: 1px solid var(--md-outline);
+  border: 1px solid var(--outline);
   font-weight: 500;
   padding: 0.5em 1.1em;
 }
 
 button.pure-button-primary,
 body a.pure-button-primary {
-  background-color: var(--md-primary) !important;
-  color: var(--md-on-primary) !important;
+  background-color: var(--primary) !important;
+  color: var(--on-primary) !important;
   border-color: transparent;
 }
 
 .pure-button-secondary,
 .pure-button:not([class*="pure-button-"]) {
   background-color: transparent;
-  color: var(--md-primary);
+  color: var(--primary);
 }
 
 .pure-button-secondary.low-profile {
@@ -282,11 +296,11 @@ body a.pure-button-primary {
 .pure-form input[type="time"]:focus,
 .pure-form input[type="url"]:focus,
 .pure-form input[type="week"]:focus {
-  border-color: var(--md-primary);
+  border-color: var(--primary);
 }
 
 .pure-form legend {
-  border-bottom-color: var(--md-outline);
+  border-bottom-color: var(--outline);
 }
 
 /*
@@ -321,12 +335,12 @@ div.thumbnail .thumbnail-placeholder {
 }
 
 .channel-name {
-  color: var(--md-on-surface-variant);
+  color: var(--on-surface-variant);
   font-size: 0.95em;
 }
 
 .video-data {
-  color: var(--md-on-surface-variant);
+  color: var(--on-surface-variant);
   font-size: 0.9em;
 }
 
@@ -348,14 +362,14 @@ div.thumbnail .thumbnail-placeholder {
 .feed-menu-item {
   border-radius: var(--md-radius-pill);
   padding: 0.5em 1.1em;
-  color: var(--md-on-surface-variant);
+  color: var(--on-surface-variant);
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .feed-menu-item:hover,
 .feed-menu-item:focus {
-  background-color: var(--md-surface-variant);
-  color: var(--md-on-surface);
+  background-color: var(--surface-variant);
+  color: var(--on-surface);
 }
 
 /*
@@ -370,22 +384,22 @@ div.thumbnail .thumbnail-placeholder {
   display: inline-block;
   padding: 0.3em 0.8em;
   border-radius: var(--md-radius-pill);
-  color: var(--md-on-surface-variant);
+  color: var(--on-surface-variant);
   transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 .pure-md-1-3 > a:hover,
 .pure-md-1-3 > a:focus {
-  background-color: var(--md-surface-variant);
-  color: var(--md-on-surface);
+  background-color: var(--surface-variant);
+  color: var(--on-surface);
 }
 
 .pure-md-1-3 > b {
   display: inline-block;
   padding: 0.3em 0.8em;
   border-radius: var(--md-radius-pill);
-  background-color: var(--md-primary-container);
-  color: var(--md-on-primary-container);
+  background-color: var(--primary-container);
+  color: var(--on-primary-container);
   font-weight: 500;
 }
 
@@ -394,7 +408,7 @@ div.thumbnail .thumbnail-placeholder {
  */
 
 .h-box h3 a {
-  color: var(--md-primary);
+  color: var(--primary);
   font-weight: 500;
 }
 
@@ -405,7 +419,7 @@ div.thumbnail .thumbnail-placeholder {
 
 .h-box hr {
   border: none;
-  border-top: 1px solid var(--md-outline);
+  border-top: 1px solid var(--outline);
   margin: 0.5em 0 1em 0;
 }
 
@@ -414,7 +428,7 @@ div.thumbnail .thumbnail-placeholder {
  */
 
 #descriptionWrapper {
-  background-color: var(--md-surface-variant);
+  background-color: var(--surface-variant);
   border-radius: var(--md-radius-md);
   padding: 1em;
 }
@@ -437,7 +451,7 @@ div.thumbnail .thumbnail-placeholder {
 
 .video-js .vjs-play-progress,
 .video-js .vjs-volume-level {
-  background-color: var(--md-primary);
+  background-color: var(--primary);
 }
 
 .video-js .vjs-big-play-button {
@@ -445,17 +459,17 @@ div.thumbnail .thumbnail-placeholder {
 }
 
 .video-js .vjs-big-play-button .vjs-icon-placeholder:before {
-  color: var(--md-primary);
+  color: var(--primary);
 }
 
 .video-js:hover .vjs-big-play-button,
 .video-js .vjs-big-play-button:focus {
-  border-color: var(--md-primary);
+  border-color: var(--primary);
 }
 
 .vjs-seeking .vjs-loading-spinner:before,
 .vjs-waiting .vjs-loading-spinner:before {
-  border-top-color: var(--md-primary);
+  border-top-color: var(--primary);
 }
 
 /*
@@ -468,7 +482,7 @@ div.thumbnail .thumbnail-placeholder {
 
 #views,
 #likes {
-  color: var(--md-on-surface-variant);
+  color: var(--on-surface-variant);
 }
 
 /* .comments (not #comments) so this also covers post.ecr's #post.comments —
@@ -476,7 +490,7 @@ div.thumbnail .thumbnail-placeholder {
    under a different id. */
 .comments {
   border-radius: var(--md-radius-md);
-  background-color: var(--md-surface-variant);
+  background-color: var(--surface-variant);
   padding: 1em;
 }
 
@@ -489,14 +503,14 @@ div.thumbnail .thumbnail-placeholder {
    child <div> of .comments, per Invidious::Frontend::Comments.template_youtube
    and its client-rendered continuations). */
 .comments > div + div {
-  border-top: 1px solid var(--md-outline);
+  border-top: 1px solid var(--outline);
   padding-top: 1em;
   margin-top: 1em;
 }
 
 body a.channel-owner {
-  background-color: var(--md-primary);
-  color: var(--md-on-primary);
+  background-color: var(--primary);
+  color: var(--on-primary);
 }
 
 .channel-owner:hover,
@@ -513,7 +527,7 @@ body a.channel-owner {
  */
 
 footer {
-  color: var(--md-on-surface-variant);
+  color: var(--on-surface-variant);
   margin-top: auto;
   padding-top: 2em;
 }
