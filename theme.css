@@ -108,13 +108,17 @@ body {
    semantically, not for visual hierarchy (h3 for the comments-count line,
    h5 for a related-video's channel name in the sidebar), so that scale reads
    as broken rather than intentional. Restore the standard browser-default
-   relative scale + bold weight Beer's font-weight:400 override took away. */
-h1 { font-size: 2em; font-weight: 700; }
-h2 { font-size: 1.5em; font-weight: 700; }
-h3 { font-size: 1.17em; font-weight: 700; }
-h4 { font-size: 1em; font-weight: 700; }
-h5 { font-size: 0.83em; font-weight: 700; }
-h6 { font-size: 0.67em; font-weight: 700; }
+   relative scale + bold weight Beer's font-weight:400 override took away.
+   Margin is set explicitly too — Beer's own reset only restores
+   margin-block-start (top), leaving margin-bottom at the universal reset's
+   0, which silently ate the vertical gap between e.g. the "N created
+   playlists" header row and the playlist grid below it. */
+h1 { font-size: 2em; font-weight: 700; margin: 0.67em 0; }
+h2 { font-size: 1.5em; font-weight: 700; margin: 0.83em 0; }
+h3 { font-size: 1.17em; font-weight: 700; margin: 1em 0; }
+h4 { font-size: 1em; font-weight: 700; margin: 1.33em 0; }
+h5 { font-size: 0.83em; font-weight: 700; margin: 1.67em 0; }
+h6 { font-size: 0.67em; font-weight: 700; margin: 2.33em 0; }
 
 /* Light-theme links are already a muted blue (#335d7a) — close enough in
    hue to retint directly. Dark-theme links are a neutral gray at rest that
@@ -180,6 +184,11 @@ pre code {
   background-color: var(--surface-variant);
   border-radius: var(--md-radius-pill);
   padding: 0 0.4em 0 1em;
+  /* Beer's bare form{display:flex} normalization turns this into a flex
+     row without touching align-items, which defaults to stretch/start
+     rather than centering the input+button within the pill's full height —
+     the placeholder text sat near the top instead of vertically centered. */
+  align-items: center;
 }
 
 .searchbar input[type="search"] {
@@ -269,10 +278,25 @@ body a.pure-button-primary {
 
 /*
  * Form controls — preferences, login, playlist forms, etc.
- * Checkboxes/radios/range/file inputs keep native browser styling: Pure CSS
- * doesn't skin them either, and doing so well requires markup this repo
- * doesn't control.
+ * Checkboxes/radios now get Beer's real components (see search_filters.cr,
+ * preferences.ecr, watch.ecr in the fork, which wrap them in Beer's
+ * <label class="checkbox|radio"><input><span> pattern). Range/file inputs
+ * keep native browser styling: Pure CSS doesn't skin them either, and doing
+ * so well requires markup this repo doesn't control.
  */
+
+/* Beer's own input[type=file] rule assumes its own .file wrapper component
+   (a visible custom button with the real file input invisible on top,
+   absolutely positioned over it) — applied to our bare, unwrapped file
+   inputs, it just makes them invisible and pulls them out of flow entirely
+   (opacity:0, position:absolute), so "Import Invidious data" etc. rows on
+   /data_control render with no visible control at all. Restore normal
+   in-flow, visible native styling since we're not adopting Beer's .file
+   markup. */
+input[type="file"] {
+  opacity: 1;
+  position: static;
+}
 
 .pure-form select,
 .pure-form textarea,
@@ -314,6 +338,24 @@ body a.pure-button-primary {
 
 .pure-form legend {
   border-bottom-color: var(--outline);
+}
+
+/* Pure's aligned-form layout (.pure-form-aligned) right-aligns a
+   fixed-10em-wide <label> against the control that follows it — designed
+   for the old separate <label for>+<input> markup. Beer's checkbox/radio
+   wrapper is itself a <label>, so Pure's rule still matches it, but now
+   text-align:right right-aligns the *whole* icon+caption pairing inside
+   that 10em box instead of just caption text — since row captions vary in
+   length, the icon's start position shifted inconsistently per row instead
+   of forming a clean column. These need their own box model: drop the
+   fixed width so the icon+caption pairs left-align as a unit, and shift the
+   whole row over by the same 11em Pure uses for .pure-controls, so the
+   icon lines up with where every other row's actual control starts. */
+.pure-form-aligned .pure-control-group label.checkbox,
+.pure-form-aligned .pure-control-group label.radio {
+  width: auto;
+  text-align: left;
+  margin: 0 0 0 11em;
 }
 
 /*
