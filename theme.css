@@ -1,0 +1,269 @@
+/*
+ * invidious-theme
+ * Material Design 3 look for Invidious, inspired by Materialious (materialio.us)
+ * and built on the same design tokens as Beer CSS (beercss.com), the library
+ * Materialious itself is based on.
+ *
+ * Loaded after default.css — relies on source order to override, following
+ * the same specificity level default.css already uses. Respects Invidious's
+ * existing light/dark toggle (`body.no-theme` / `body.dark-theme`), it does
+ * not introduce a new one.
+ *
+ * Scope (first pass): top nav, search field, buttons, video/channel cards,
+ * typography, watch-page basics. Everything else keeps default.css's look
+ * until this file is extended.
+ */
+
+:root {
+  --md-primary: #2596be;
+  --md-on-primary: #ffffff;
+  --md-primary-container: #d2ecf5;
+  --md-on-primary-container: #0a3c4c;
+
+  --md-surface: #fbfcfe;
+  --md-on-surface: #1a1c1e;
+  --md-surface-variant: #eef1f4;
+  --md-on-surface-variant: #42474e;
+  --md-outline: #b8bec5;
+
+  --md-radius-sm: 8px;
+  --md-radius-md: 12px;
+  --md-radius-pill: 999px;
+  --md-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.12), 0 1px 3px 1px rgba(0, 0, 0, 0.08);
+  --md-elevation-2: 0 2px 6px rgba(0, 0, 0, 0.15), 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+body.dark-theme {
+  --md-primary: #7fd0ee;
+  --md-on-primary: #00344c;
+  --md-primary-container: #0a3c4c;
+  --md-on-primary-container: #d2ecf5;
+
+  --md-surface: #121417;
+  --md-on-surface: #e2e2e6;
+  --md-surface-variant: #1c1f23;
+  --md-on-surface-variant: #c2c7cf;
+  --md-outline: #42474e;
+
+  --md-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 3px 1px rgba(0, 0, 0, 0.3);
+  --md-elevation-2: 0 2px 6px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+/* Mirrors default.css's own `@media (prefers-color-scheme: dark) { .no-theme ... }`
+   pattern: when the user hasn't explicitly picked a theme, follow the OS. */
+@media (prefers-color-scheme: dark) {
+  .no-theme {
+    --md-primary: #7fd0ee;
+    --md-on-primary: #00344c;
+    --md-primary-container: #0a3c4c;
+    --md-on-primary-container: #d2ecf5;
+
+    --md-surface: #121417;
+    --md-on-surface: #e2e2e6;
+    --md-surface-variant: #1c1f23;
+    --md-on-surface-variant: #c2c7cf;
+    --md-outline: #42474e;
+
+    --md-elevation-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 1px 3px 1px rgba(0, 0, 0, 0.3);
+    --md-elevation-2: 0 2px 6px rgba(0, 0, 0, 0.5), 0 1px 2px rgba(0, 0, 0, 0.4);
+  }
+}
+
+/*
+ * Typography
+ * No external font requests (would leak metadata to a third-party CDN on a
+ * privacy-focused frontend) — prefer locally-available fonts that read as
+ * closer to Material's default (Roboto) than the current stack.
+ */
+
+html,
+body {
+  font-family: Roboto, "Segoe UI", BlinkMacSystemFont, -apple-system, Oxygen,
+    Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
+  letter-spacing: 0.01em;
+}
+
+/*
+ * Top app bar
+ */
+
+.navbar {
+  margin: 0.5em 0 1.5em 0;
+  padding: 0.6em 1em;
+  border-radius: var(--md-radius-md);
+  background-color: var(--md-surface-variant);
+  box-shadow: var(--md-elevation-1);
+}
+
+.navbar .index-link {
+  font-weight: 700;
+  font-size: 1.15em;
+  color: var(--md-primary);
+}
+
+.navbar .pure-menu-heading {
+  color: var(--md-on-surface-variant);
+  border-radius: var(--md-radius-pill);
+  padding: 0.4em;
+  transition: background-color 0.15s ease;
+}
+
+.navbar .pure-menu-heading:hover,
+.navbar .pure-menu-heading:focus {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.dark-theme .navbar .pure-menu-heading:hover,
+.dark-theme .navbar .pure-menu-heading:focus {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/*
+ * Search field — Material 3 "filled text field" pill
+ */
+
+.searchbar .pure-form {
+  background-color: var(--md-surface-variant);
+  border-radius: var(--md-radius-pill);
+  padding: 0 0.4em 0 1em;
+}
+
+.searchbar input[type="search"] {
+  border: none !important;
+  border-bottom: none !important;
+  background-color: transparent;
+  color: var(--md-on-surface);
+  padding: 0.6em 0;
+}
+
+.searchbar input[type="search"]:focus {
+  border: none !important;
+  border-bottom: none !important;
+  margin: 1px;
+}
+
+.searchbar #searchbutton {
+  border-radius: var(--md-radius-pill);
+  color: var(--md-primary);
+  padding: 0.5em;
+}
+
+.searchbar #searchbutton:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+  color: var(--md-primary);
+}
+
+.dark-theme .searchbar #searchbutton:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+/*
+ * Buttons — Material 3 filled / outlined, fully-rounded
+ */
+
+.pure-button-primary,
+.pure-button-secondary {
+  border-radius: var(--md-radius-pill);
+  border: 1px solid var(--md-outline);
+  font-weight: 500;
+  padding: 0.5em 1.1em;
+}
+
+button.pure-button-primary,
+body a.pure-button-primary {
+  background-color: var(--md-primary) !important;
+  color: var(--md-on-primary) !important;
+  border-color: transparent;
+}
+
+.pure-button-secondary {
+  background-color: transparent;
+  color: var(--md-primary);
+}
+
+.pure-button-secondary.low-profile {
+  padding: 0.4em 0.7em;
+}
+
+.pure-button-primary:hover,
+.pure-button-primary:focus,
+.pure-button-secondary:hover,
+.pure-button-secondary:focus {
+  filter: brightness(1.08);
+}
+
+/*
+ * Cards — video/channel/playlist grid
+ */
+
+.h-box.title,
+#player-container.h-box {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+div.thumbnail img.thumbnail,
+div.thumbnail .thumbnail-placeholder {
+  border-radius: var(--md-radius-md);
+}
+
+.pure-u-1.pure-u-md-1-4 {
+  transition: transform 0.12s ease;
+}
+
+.pure-u-1.pure-u-md-1-4:hover {
+  transform: translateY(-2px);
+}
+
+.pure-u-1.pure-u-md-1-4:hover div.thumbnail img.thumbnail {
+  box-shadow: var(--md-elevation-2);
+}
+
+.video-card-row p {
+  margin: 0.3em 0;
+}
+
+.channel-name {
+  color: var(--md-on-surface-variant);
+  font-size: 0.95em;
+}
+
+.video-data {
+  color: var(--md-on-surface-variant);
+  font-size: 0.9em;
+}
+
+.length,
+.top-left-overlay button {
+  border-radius: var(--md-radius-sm);
+  background-color: rgba(0, 0, 0, 0.75) !important;
+}
+
+/*
+ * Watch page basics
+ */
+
+.channel-profile > img {
+  border-radius: var(--md-radius-pill);
+}
+
+#views,
+#likes {
+  color: var(--md-on-surface-variant);
+}
+
+#comments {
+  border-radius: var(--md-radius-md);
+  background-color: var(--md-surface-variant);
+  padding: 1em;
+}
+
+/*
+ * Footer — quieter, matches surface-variant tone
+ */
+
+footer {
+  color: var(--md-on-surface-variant);
+  margin-top: 2em;
+}
