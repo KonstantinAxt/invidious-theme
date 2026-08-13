@@ -11,8 +11,8 @@
  *
  * Scope: top nav, search field, buttons, video/channel cards, typography,
  * feed navigation (Popular/Trending/Subscriptions/Playlists/History),
- * channel page tabs & description, watch-page basics. Comments and the
- * embed page still look like stock Invidious until extended.
+ * channel page tabs & description, watch page (player accent, comments).
+ * The embed page still looks like stock Invidious until extended.
  */
 
 :root {
@@ -325,6 +325,45 @@ div.thumbnail .thumbnail-placeholder {
 }
 
 /*
+ * Player
+ *
+ * video-js ships its own stock skin (assets/videojs/video.js/video-js.css,
+ * fetched at build time — not vendored in this repo). Retinting is scoped to
+ * the interactive accent (progress/volume fill, big-play icon, loading
+ * spinner) rather than a full skin rebuild of its control bar/menus, which
+ * risks breaking video-js's own layout math for comparatively little payoff.
+ */
+
+#player-container {
+  border-radius: var(--md-radius-md);
+  overflow: hidden;
+  box-shadow: var(--md-elevation-2);
+}
+
+.video-js .vjs-play-progress,
+.video-js .vjs-volume-level {
+  background-color: var(--md-primary);
+}
+
+.video-js .vjs-big-play-button {
+  border-radius: var(--md-radius-md);
+}
+
+.video-js .vjs-big-play-button .vjs-icon-placeholder:before {
+  color: var(--md-primary);
+}
+
+.video-js:hover .vjs-big-play-button,
+.video-js .vjs-big-play-button:focus {
+  border-color: var(--md-primary);
+}
+
+.vjs-seeking .vjs-loading-spinner:before,
+.vjs-waiting .vjs-loading-spinner:before {
+  border-top-color: var(--md-primary);
+}
+
+/*
  * Watch page basics
  */
 
@@ -341,6 +380,30 @@ div.thumbnail .thumbnail-placeholder {
   border-radius: var(--md-radius-md);
   background-color: var(--md-surface-variant);
   padding: 1em;
+}
+
+#comments h3 {
+  margin-top: 0;
+}
+
+/* Divider between the comment-count header and each top-level comment,
+   and between consecutive top-level comments (each is its own direct
+   child <div> of #comments, per Invidious::Frontend::Comments.template_youtube
+   and its client-rendered continuations). */
+#comments > div + div {
+  border-top: 1px solid var(--md-outline);
+  padding-top: 1em;
+  margin-top: 1em;
+}
+
+body a.channel-owner {
+  background-color: var(--md-primary);
+  color: var(--md-on-primary);
+}
+
+.channel-owner:hover,
+.channel-owner:focus {
+  filter: brightness(1.1);
 }
 
 /*

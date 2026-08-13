@@ -12,7 +12,7 @@ Respects Invidious's existing light/dark toggle (`body.no-theme` / `body.dark-th
 
 ## Scope
 
-Covers the highest-visibility surfaces: top nav, search field, buttons, video/channel/playlist cards, typography, feed navigation (Popular/Trending/Subscriptions/Playlists/History), channel page tabs and description, and watch-page basics. The watch page's player/comments area is a deliberately separate follow-up phase, and the embed page still looks like stock Invidious until this is extended further.
+Covers the highest-visibility surfaces: top nav, search field, buttons, video/channel/playlist cards, typography, feed navigation (Popular/Trending/Subscriptions/Playlists/History), channel page tabs and description, and the watch page (player accent color, comments). The video-js player's control bar/menus keep their stock skin — only the interactive accent (progress/volume fill, big-play icon, loading spinner) is retinted, not a full skin rebuild. The embed page still looks like stock Invidious until this is extended further.
 
 ## Design tokens
 
