@@ -9,10 +9,14 @@
  * existing light/dark toggle (`body.no-theme` / `body.dark-theme`), it does
  * not introduce a new one.
  *
- * Scope: top nav, search field, buttons, video/channel cards, typography,
- * feed navigation (Popular/Trending/Subscriptions/Playlists/History),
- * channel page tabs & description, watch page (player accent, comments).
- * The embed page still looks like stock Invidious until extended.
+ * Scope: top nav, search field & filters, buttons, form controls, links,
+ * video/channel cards, typography, feed navigation (Popular/Trending/
+ * Subscriptions/Playlists/History), channel page tabs & description, watch
+ * page (player accent, comments — also covers community posts and single
+ * post views, which reuse the same comment template), account/playlist
+ * management pages. The embed page and the standalone JS-license page are
+ * structurally outside this theme's reach (separate HTML documents that
+ * don't load it) and remain stock.
  */
 
 :root {
@@ -83,6 +87,27 @@ body {
     Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Helvetica,
     Arial, sans-serif;
   letter-spacing: 0.01em;
+}
+
+/* Light-theme links are already a muted blue (#335d7a) — close enough in
+   hue to retint directly. Dark-theme links are a neutral gray at rest that
+   only turns cyan on hover/focus (rgb(0,182,240)) — already close to our
+   own dark-mode primary (#7fd0ee) and a deliberate "quiet until interacted
+   with" convention, so left as-is rather than fighting it. */
+.light-theme a,
+.light-theme .simulated_a {
+  color: var(--md-primary);
+}
+
+code {
+  background-color: var(--md-surface-variant);
+  border-radius: var(--md-radius-sm);
+  padding: 0.15em 0.4em;
+}
+
+pre code {
+  display: block;
+  padding: 1em;
 }
 
 /*
@@ -160,11 +185,29 @@ body {
 }
 
 /*
+ * Search filters panel (search.css already themes #filters-box per-theme
+ * with a plain gray background — matched here at equal selector specificity
+ * so source order can win without !important).
+ */
+
+.light-theme #filters-box,
+.dark-theme #filters-box,
+.no-theme #filters-box {
+  background-color: var(--md-surface-variant);
+  border-radius: var(--md-radius-md);
+}
+
+#filters-collapse summary:before {
+  color: var(--md-primary);
+}
+
+/*
  * Buttons — Material 3 filled / outlined, fully-rounded
  */
 
 .pure-button-primary,
-.pure-button-secondary {
+.pure-button-secondary,
+.pure-button:not([class*="pure-button-"]) {
   border-radius: var(--md-radius-pill);
   border: 1px solid var(--md-outline);
   font-weight: 500;
@@ -178,7 +221,8 @@ body a.pure-button-primary {
   border-color: transparent;
 }
 
-.pure-button-secondary {
+.pure-button-secondary,
+.pure-button:not([class*="pure-button-"]) {
   background-color: transparent;
   color: var(--md-primary);
 }
@@ -190,8 +234,59 @@ body a.pure-button-primary {
 .pure-button-primary:hover,
 .pure-button-primary:focus,
 .pure-button-secondary:hover,
-.pure-button-secondary:focus {
+.pure-button-secondary:focus,
+.pure-button:not([class*="pure-button-"]):hover,
+.pure-button:not([class*="pure-button-"]):focus {
   filter: brightness(1.08);
+}
+
+/*
+ * Form controls — preferences, login, playlist forms, etc.
+ * Checkboxes/radios/range/file inputs keep native browser styling: Pure CSS
+ * doesn't skin them either, and doing so well requires markup this repo
+ * doesn't control.
+ */
+
+.pure-form select,
+.pure-form textarea,
+.pure-form input[type="color"],
+.pure-form input[type="date"],
+.pure-form input[type="datetime-local"],
+.pure-form input[type="datetime"],
+.pure-form input[type="email"],
+.pure-form input[type="month"],
+.pure-form input[type="number"],
+.pure-form input[type="password"],
+.pure-form input[type="search"],
+.pure-form input[type="tel"],
+.pure-form input[type="text"],
+.pure-form input[type="time"],
+.pure-form input[type="url"],
+.pure-form input[type="week"] {
+  border-radius: var(--md-radius-sm);
+}
+
+.pure-form select:focus,
+.pure-form textarea:focus,
+.pure-form input[type="color"]:focus,
+.pure-form input[type="date"]:focus,
+.pure-form input[type="datetime-local"]:focus,
+.pure-form input[type="datetime"]:focus,
+.pure-form input[type="email"]:focus,
+.pure-form input[type="month"]:focus,
+.pure-form input[type="number"]:focus,
+.pure-form input[type="password"]:focus,
+.pure-form input[type="search"]:focus,
+.pure-form input[type="tel"]:focus,
+.pure-form input[type="text"]:focus,
+.pure-form input[type="time"]:focus,
+.pure-form input[type="url"]:focus,
+.pure-form input[type="week"]:focus {
+  border-color: var(--md-primary);
+}
+
+.pure-form legend {
+  border-bottom-color: var(--md-outline);
 }
 
 /*
@@ -376,21 +471,24 @@ div.thumbnail .thumbnail-placeholder {
   color: var(--md-on-surface-variant);
 }
 
-#comments {
+/* .comments (not #comments) so this also covers post.ecr's #post.comments —
+   a single post's own comment view uses the same template_youtube markup
+   under a different id. */
+.comments {
   border-radius: var(--md-radius-md);
   background-color: var(--md-surface-variant);
   padding: 1em;
 }
 
-#comments h3 {
+.comments h3 {
   margin-top: 0;
 }
 
 /* Divider between the comment-count header and each top-level comment,
    and between consecutive top-level comments (each is its own direct
-   child <div> of #comments, per Invidious::Frontend::Comments.template_youtube
+   child <div> of .comments, per Invidious::Frontend::Comments.template_youtube
    and its client-rendered continuations). */
-#comments > div + div {
+.comments > div + div {
   border-top: 1px solid var(--md-outline);
   padding-top: 1em;
   margin-top: 1em;

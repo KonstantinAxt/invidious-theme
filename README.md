@@ -12,7 +12,9 @@ Respects Invidious's existing light/dark toggle (`body.no-theme` / `body.dark-th
 
 ## Scope
 
-Covers the highest-visibility surfaces: top nav, search field, buttons, video/channel/playlist cards, typography, feed navigation (Popular/Trending/Subscriptions/Playlists/History), channel page tabs and description, and the watch page (player accent color, comments). The video-js player's control bar/menus keep their stock skin — only the interactive accent (progress/volume fill, big-play icon, loading spinner) is retinted, not a full skin rebuild. The embed page still looks like stock Invidious until this is extended further.
+Covers essentially every page that loads Invidious's own `template.ecr` layout: top nav, search field and filters, buttons (including plain `.pure-button` confirmation dialogs), form controls (inputs/selects/textareas — not checkboxes/radios/range/file, which keep native styling), links, video/channel/playlist cards, typography, feed navigation (Popular/Trending/Subscriptions/Playlists/History), channel page tabs and description, the watch page (player accent color, comments — the same treatment also covers community posts and single post views, which reuse the comment template), and account/playlist management pages (preferences, login, playlist create/edit/delete, subscription/token managers, etc.).
+
+The video-js player's control bar/menus keep their stock skin — only the interactive accent (progress/volume fill, big-play icon, loading spinner) is retinted, not a full skin rebuild. The embed page and the standalone JS-license page are separate HTML documents that don't load this stylesheet at all, so they're structurally out of reach rather than just unstyled.
 
 ## Design tokens
 
