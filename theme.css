@@ -341,21 +341,26 @@ input[type="file"] {
 }
 
 /* Pure's aligned-form layout (.pure-form-aligned) right-aligns a
-   fixed-10em-wide <label> against the control that follows it — designed
+   fixed-width <label> against the control that follows it — designed
    for the old separate <label for>+<input> markup. Beer's checkbox/radio
    wrapper is itself a <label>, so Pure's rule still matches it, but now
    text-align:right right-aligns the *whole* icon+caption pairing inside
-   that 10em box instead of just caption text — since row captions vary in
+   that box instead of just caption text — since row captions vary in
    length, the icon's start position shifted inconsistently per row instead
    of forming a clean column. These need their own box model: drop the
    fixed width so the icon+caption pairs left-align as a unit, and shift the
-   whole row over by the same 11em Pure uses for .pure-controls, so the
-   icon lines up with where every other row's actual control starts. */
+   whole row over so the icon lines up with where every other row's actual
+   control (e.g. a <select>) starts. That start position is
+   default.css's own 19em label width + Pure's 1em label margin = 20em,
+   evaluated at the same shrunk label font-size (12px) inherited from
+   Pure's `.pure-control-group label` rule — 20.32em (not a round 20em)
+   corrects for a few px of border-box rounding on the target <select>,
+   confirmed by measuring both against the same live page. */
 .pure-form-aligned .pure-control-group label.checkbox,
 .pure-form-aligned .pure-control-group label.radio {
   width: auto;
   text-align: left;
-  margin: 0 0 0 11em;
+  margin: 0 0 0 20.32em;
 }
 
 /*
@@ -387,6 +392,44 @@ div.thumbnail .thumbnail-placeholder {
 
 .video-card-row p {
   margin: 0.3em 0;
+}
+
+/* Card headline (video/playlist title) — reserve a fixed 2-line-tall slot
+   so a short 1-line title and a long 3-line title don't leave neighboring
+   cards' channel-name/stats rows sitting at different heights (visible on
+   the home grid: a long title pushed everything below it down relative to
+   the rest of that row). `> a > p` matches only this title paragraph
+   (title is the only place a bare <p> is a direct child of the row's <a> —
+   channel-name/video-data paragraphs are always one level deeper, inside
+   their own .flex-left/.flex-right wrapper), so this can't clip captions
+   elsewhere in the card. */
+.video-card-row > a > p {
+  position: relative;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.3em;
+  min-height: 2.6em;
+}
+
+/* Hovering reveals the full title rather than un-clamping in place —
+   growing the box in flow would push that one card's own rows down
+   without affecting its siblings' *heights*, but since Pure's grid wraps
+   cards into rows, a taller card still shifts where the next row of cards
+   starts, i.e. exactly the jump this rule exists to prevent, just
+   triggered by hover instead of by content length. */
+.video-card-row > a:hover > p {
+  -webkit-line-clamp: unset;
+  overflow: visible;
+  position: absolute;
+  inset-inline: 0;
+  z-index: 2;
+  background-color: var(--surface);
+  box-shadow: var(--md-elevation-2);
+  border-radius: var(--md-radius-sm);
+  padding: 0.2em 0.4em;
+  margin: 0.3em -0.4em;
 }
 
 .channel-name {
