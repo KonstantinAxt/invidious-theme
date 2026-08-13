@@ -505,10 +505,15 @@ body a.channel-owner {
 }
 
 /*
- * Footer — quieter, matches surface-variant tone
+ * Footer — quieter, matches surface-variant tone.
+ * default.css already implements the sticky-footer pattern (#contents is a
+ * flex column with min-height: 100vh, footer has margin-top: auto) — must
+ * keep margin-top: auto here too, or this rule clobbers it at equal
+ * selector specificity via source order.
  */
 
 footer {
   color: var(--md-on-surface-variant);
-  margin-top: 2em;
+  margin-top: auto;
+  padding-top: 2em;
 }
