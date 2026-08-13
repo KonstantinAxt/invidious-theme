@@ -12,7 +12,7 @@ Respects Invidious's existing light/dark toggle (`body.no-theme` / `body.dark-th
 
 ## Scope
 
-First pass covers the highest-visibility surfaces: top nav, search field, buttons, video/channel/playlist cards, typography, and watch-page basics. Everything else (channel page layout, playlists, comments styling beyond the basics, embed page) still looks like stock Invidious until this is extended.
+Covers the highest-visibility surfaces: top nav, search field, buttons, video/channel/playlist cards, typography, feed navigation (Popular/Trending/Subscriptions/Playlists/History), channel page tabs and description, and watch-page basics. The watch page's player/comments area is a deliberately separate follow-up phase, and the embed page still looks like stock Invidious until this is extended further.
 
 ## Design tokens
 
