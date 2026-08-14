@@ -363,6 +363,24 @@ input[type="file"] {
   margin: 0 0 0 20.32em;
 }
 
+/* Beer's .field has no multi-control variant — a row with several selects
+   (preferences.ecr's "Default comments"/"Default captions"/feed-menu rows,
+   one per priority/rank) needs one .field per select, grouped in a plain
+   flex row ourselves. Only the first .field in the group carries .label
+   (see preferences.ecr) — repeating the row's caption on every select would
+   lose the "this is the Nth choice" ordering the row exists to show. */
+.pure-control-group.multi-field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.pure-control-group.multi-field .field {
+  flex: 0 0 auto;
+  min-width: 8rem;
+}
+
 /*
  * Cards — video/channel/playlist grid
  */
