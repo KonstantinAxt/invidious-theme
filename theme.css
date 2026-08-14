@@ -347,20 +347,28 @@ input[type="file"] {
    text-align:right right-aligns the *whole* icon+caption pairing inside
    that box instead of just caption text — since row captions vary in
    length, the icon's start position shifted inconsistently per row instead
-   of forming a clean column. These need their own box model: drop the
-   fixed width so the icon+caption pairs left-align as a unit, and shift the
-   whole row over so the icon lines up with where every other row's actual
-   control (e.g. a <select>) starts. That start position is
-   default.css's own 19em label width + Pure's 1em label margin = 20em,
-   evaluated at the same shrunk label font-size (12px) inherited from
-   Pure's `.pure-control-group label` rule — 20.32em (not a round 20em)
-   corrects for a few px of border-box rounding on the target <select>,
-   confirmed by measuring both against the same live page. */
+   of forming a clean column. Drop the fixed width/right-align so the
+   icon+caption pairs sit flush left as a unit — this used to also need a
+   margin-left shifting them out to match where a <select> started, back
+   when selects were Pure's label-left/control-right rows; now that
+   selects are Beer .field boxes starting flush left themselves (see
+   below), flush left is the correct target for both, no margin needed. */
 .pure-form-aligned .pure-control-group label.checkbox,
 .pure-form-aligned .pure-control-group label.radio {
   width: auto;
   text-align: left;
-  margin: 0 0 0 20.32em;
+  margin: 0;
+}
+
+/* Beer's .field is display:flex (block-level) with no width of its own, so
+   it stretches to its container's full width by default — inline-flex lets
+   it shrink to the select's actual content width instead, matching how a
+   bare <select> used to size itself. (Grouped multi-field selects opt out
+   of this via their own flex-item sizing below, so this is scoped to
+   standalone single-select rows only.) */
+.pure-control-group > .field {
+  display: inline-flex;
+  max-width: 100%;
 }
 
 /* Beer's .field has no multi-control variant — a row with several selects
