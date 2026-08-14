@@ -403,6 +403,10 @@ div.thumbnail .thumbnail-placeholder {
    channel-name/video-data paragraphs are always one level deeper, inside
    their own .flex-left/.flex-right wrapper), so this can't clip captions
    elsewhere in the card. */
+.video-card-row > a {
+  display: block;
+}
+
 .video-card-row > a > p {
   position: relative;
   display: -webkit-box;
@@ -418,12 +422,18 @@ div.thumbnail .thumbnail-placeholder {
    without affecting its siblings' *heights*, but since Pure's grid wraps
    cards into rows, a taller card still shifts where the next row of cards
    starts, i.e. exactly the jump this rule exists to prevent, just
-   triggered by hover instead of by content length. */
+   triggered by hover instead of by content length. `display: block` has
+   to be reset explicitly here — `-webkit-line-clamp: unset` alone doesn't
+   undo `display: -webkit-box`, and leaving that in place turns the
+   expanded text into a vertical flexbox that stacks one character per
+   "line" instead of wrapping normally. */
 .video-card-row > a:hover > p {
+  display: block;
   -webkit-line-clamp: unset;
   overflow: visible;
   position: absolute;
   inset-inline: 0;
+  top: 0;
   z-index: 2;
   background-color: var(--surface);
   box-shadow: var(--md-elevation-2);
